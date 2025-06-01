@@ -54,7 +54,7 @@ const getAvatarContent = name => async input => {
   return { type: 'url', data: url }
 }
 
-const getAvatar = async (fn, name, args) => {
+const getAvatar = async (fn, name, args, timeout = AVATAR_TIMEOUT) => {
   const promise = Promise.resolve(fn(args))
     .then(getAvatarContent(name))
     .catch(error => {
@@ -65,7 +65,7 @@ const getAvatar = async (fn, name, args) => {
       throw error
     })
 
-  return pTimeout(promise, AVATAR_TIMEOUT).catch(error => {
+  return pTimeout(promise, timeout).catch(error => {
     error.name = name
     throw error
   })
@@ -88,7 +88,7 @@ module.exports = async args => {
   if (fastProviders.length > 0) {
     try {
       const fastPromises = fastProviders.map(name =>
-        pTimeout(getAvatar(providers[name], name, args), 200)
+        getAvatar(providers[name], name, args, 200)
       )
       return await pAny(fastPromises)
     } catch (error) {
@@ -101,7 +101,7 @@ module.exports = async args => {
   if (mediumProviders.length > 0) {
     try {
       const mediumPromises = mediumProviders.map(name =>
-        pTimeout(getAvatar(providers[name], name, args), 800)
+        getAvatar(providers[name], name, args, 800)
       )
       return await pAny(mediumPromises)
     } catch (error) {
@@ -109,10 +109,10 @@ module.exports = async args => {
     }
   }
   
-  // Finally try slow providers (reduced timeout)
+  // Finally try slow providers (much reduced timeout)
   const slowProviders = collection.filter(name => SLOW_PROVIDERS.includes(name))
   const slowPromises = slowProviders.map(name =>
-    pTimeout(getAvatar(providers[name], name, args), 3000)
+    getAvatar(providers[name], name, args, 1000)
   )
   return pAny(slowPromises)
 }
