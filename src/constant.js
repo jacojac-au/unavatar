@@ -9,13 +9,13 @@ const {
   ALLOWED_REQ_HEADERS = ['accept-encoding', 'accept', 'user-agent'],
   AVATAR_SIZE = 400,
   AVATAR_TIMEOUT = 25000,
-  TTL_DEFAULT = ms('1y'),
-  TTL_MIN = ms('1h'),
+  TTL_DEFAULT = ms('1m'),
+  TTL_MIN = ms('1m'),
   TTL_MAX = ms('28d'),
   NODE_ENV = 'development',
   PORT = 3000,
   RATE_LIMIT_WINDOW = 86400,
-  RATE_LIMIT = 50
+  RATE_LIMIT = 999999999
 } = process.env
 
 const API_URL =
