@@ -18,13 +18,21 @@ module.exports = async (url, { puppeteerOpts, ...opts } = {}) => {
     getBrowserless: () => browserContext,
     serializeHtml: $ => ({ $ }),
     puppeteerOpts: {
-      timeout: 2000,
+      timeout: 1500,
       args: ['--disable-web-security', '--disable-features=VizDisplayCompositor', '--no-sandbox', '--disable-dev-shm-usage', '--disable-http-cache', '--disable-application-cache'],
       ...puppeteerOpts
     },
     gotOpts: {
       ...gotOpts,
-      timeout: 2000,
+      timeout: {
+        lookup: 100,
+        connect: 200,
+        secureConnect: 200,
+        socket: 300,
+        response: 500,
+        send: 1000,
+        request: 1500
+      },
       cache: false,
       headers: {
         ...gotOpts.headers,
