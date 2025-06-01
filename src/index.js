@@ -54,8 +54,8 @@ router
     require('http-compression')(),
     require('cors')(),
     serveStatic(path.resolve('public'), {
-      immutable: true,
-      maxAge: TTL_DEFAULT
+      immutable: false,
+      maxAge: 0
     }),
     require('./authentication'),
     isProduction && require('./ua'),

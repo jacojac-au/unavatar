@@ -13,16 +13,24 @@ module.exports = async (url, { puppeteerOpts, ...opts } = {}) => {
 
   const result = await getHTML(url, {
     prerender: false,
+    cache: false,
     ...opts,
     getBrowserless: () => browserContext,
     serializeHtml: $ => ({ $ }),
     puppeteerOpts: {
       timeout: AVATAR_TIMEOUT,
+      args: ['--disable-web-security', '--disable-features=VizDisplayCompositor', '--no-sandbox', '--disable-dev-shm-usage', '--disable-http-cache', '--disable-application-cache'],
       ...puppeteerOpts
     },
     gotOpts: {
       ...gotOpts,
-      timeout: AVATAR_TIMEOUT
+      timeout: AVATAR_TIMEOUT,
+      cache: false,
+      headers: {
+        ...gotOpts.headers,
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
+      }
     }
   })
 
