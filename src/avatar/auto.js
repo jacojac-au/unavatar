@@ -71,12 +71,50 @@ const getAvatar = async (fn, name, args) => {
   })
 }
 
+// Fast providers that use direct URLs or simple APIs (< 200ms)
+const FAST_PROVIDERS = ['gravatar', 'github', 'google', 'duckduckgo']
+
+// Medium providers that use external APIs (200-800ms)  
+const MEDIUM_PROVIDERS = ['microlink']
+
+// Slow providers that use web scraping (1-10s)
+const SLOW_PROVIDERS = ['x', 'youtube', 'dribbble', 'telegram', 'soundcloud', 'deviantart', 'gitlab', 'readcv', 'substack', 'twitch', 'onlyfans']
+
 module.exports = async args => {
   const collection = providersBy[is(args)]
-  const promises = collection.map(name =>
-    pTimeout(getAvatar(providers[name], name, args), AVATAR_TIMEOUT)
+  
+  // Try fast providers first (200ms timeout)
+  const fastProviders = collection.filter(name => FAST_PROVIDERS.includes(name))
+  if (fastProviders.length > 0) {
+    try {
+      const fastPromises = fastProviders.map(name =>
+        pTimeout(getAvatar(providers[name], name, args), 200)
+      )
+      return await pAny(fastPromises)
+    } catch (error) {
+      // Continue to medium providers if all fast providers fail
+    }
+  }
+  
+  // Try medium providers (800ms timeout)
+  const mediumProviders = collection.filter(name => MEDIUM_PROVIDERS.includes(name))
+  if (mediumProviders.length > 0) {
+    try {
+      const mediumPromises = mediumProviders.map(name =>
+        pTimeout(getAvatar(providers[name], name, args), 800)
+      )
+      return await pAny(mediumPromises)
+    } catch (error) {
+      // Continue to slow providers if medium providers fail
+    }
+  }
+  
+  // Finally try slow providers (reduced timeout)
+  const slowProviders = collection.filter(name => SLOW_PROVIDERS.includes(name))
+  const slowPromises = slowProviders.map(name =>
+    pTimeout(getAvatar(providers[name], name, args), 3000)
   )
-  return pAny(promises)
+  return pAny(slowPromises)
 }
 
 module.exports.getAvatar = getAvatar
