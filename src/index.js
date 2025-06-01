@@ -16,7 +16,7 @@ const { providers } = require('./providers')
 const ssrCache = require('./send/cache')
 const avatar = require('./avatar')
 
-const { isProduction, API_URL } = require('./constant')
+const { isProduction, API_URL, TTL_DEFAULT } = require('./constant')
 
 const router = createRouter((error, _, res) => {
   const hasError = error !== undefined
@@ -55,7 +55,7 @@ router
     require('cors')(),
     serveStatic(path.resolve('public'), {
       immutable: true,
-      maxAge: '1y'
+      maxAge: TTL_DEFAULT
     }),
     require('./authentication'),
     isProduction && require('./ua'),
