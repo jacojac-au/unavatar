@@ -8,7 +8,7 @@ const TMP_FOLDER = existsSync('/dev/shm') ? '/dev/shm' : '/tmp'
 const {
   ALLOWED_REQ_HEADERS = ['accept-encoding', 'accept', 'user-agent'],
   AVATAR_SIZE = 400,
-  AVATAR_TIMEOUT = 3000,
+  AVATAR_TIMEOUT = 10000,
   TTL_DEFAULT = ms('1m'),
   TTL_MIN = ms('1m'),
   TTL_MAX = ms('28d'),
