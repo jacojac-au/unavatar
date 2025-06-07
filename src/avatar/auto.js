@@ -112,7 +112,7 @@ module.exports = async args => {
   // Finally try slow providers (much reduced timeout)
   const slowProviders = collection.filter(name => SLOW_PROVIDERS.includes(name))
   const slowPromises = slowProviders.map(name =>
-    getAvatar(providers[name], name, args, 2000)
+    getAvatar(providers[name], name, args, 5000)
   )
   return pAny(slowPromises)
 }
