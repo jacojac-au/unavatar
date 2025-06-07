@@ -25,13 +25,13 @@ module.exports = async (url, { puppeteerOpts, ...opts } = {}) => {
     gotOpts: {
       ...gotOpts,
       timeout: {
-        lookup: 100,
-        connect: 200,
-        secureConnect: 200,
-        socket: 300,
-        response: 500,
-        send: 1000,
-        request: 1500
+        lookup: 1000,
+        connect: 3000,
+        secureConnect: 3000,
+        socket: 2000,
+        response: 2000,
+        send: 2000,
+        request: 5000
       },
       cache: false,
       headers: {
