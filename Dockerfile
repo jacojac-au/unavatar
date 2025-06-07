@@ -24,6 +24,6 @@ COPY . .
 
 USER blessuser
 
-EXPOSE 3000
+EXPOSE 3001
 
-CMD ["node", "src/server.js"]
+CMD ["node", "x-avatar.js"]
